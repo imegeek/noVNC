@@ -5,7 +5,7 @@ import tempfile
 import argparse
 
 __author__ = "Im Geek (Ankush Bhagat)"
-__version__ = "0.99.9"
+__version__ = "1.0.1"
 
 # Construct the path to the data folder
 base_path = os.path.dirname(os.path.abspath(__file__))
@@ -26,7 +26,7 @@ def extract_zip(zip_file_path, extract_to_path):
         zip_ref.extractall(extract_to_path)
 
 # Example usage
-zip_file_path = os.path.join(base_path, "resources/server.py")
+zip_file_path = os.path.join(base_path, "resources/novnc_server.zip")
 server_path = os.path.join(tempfile.gettempdir(), 'novnc_server')
 
 extract_zip(zip_file_path, server_path)
