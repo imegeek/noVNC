@@ -5,7 +5,7 @@ import tempfile
 import argparse
 
 __author__ = "Im Geek (Ankush Bhagat)"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 # Construct the path to the data folder
 base_path = os.path.dirname(os.path.abspath(__file__))
@@ -61,6 +61,6 @@ target_host, target_port = args.target.split(":")
 def main():
     try:
         # Start the proxy server
-        os.system(f"websockify.exe {listen_host}:{listen_port} {target_host}:{target_port} --web {server_path}")
+        os.system(f"websockify {listen_host}:{listen_port} {target_host}:{target_port} --web {server_path}")
     except (KeyboardInterrupt, Exception):
         sys.exit(0)
