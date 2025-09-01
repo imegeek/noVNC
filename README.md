@@ -1,70 +1,105 @@
 # noVNC
 
-noVNC is a Python-based server that comes with included **(websockify and noVNC)** that utilizes noVNC and websockify to provide a web-based VNC client. This allows users to remotely access and control a desktop environment through their web browser.
+**noVNC** is a Python-based wrapper that bundles **websockify** and the **noVNC HTML client** to provide a **web-based VNC viewer**.It enables remote desktop access directly from the browser without requiring a standalone VNC client.
 
-## Features
+* * *
 
-* **Easy Setup** : Quickly integrate your VNC server and access it via a web browser.
-* **Web-based Access** : No need for a standalone VNC client; everything runs in the browser.
-* **Secure Connection** : Uses websockify to securely proxy WebSocket connections to the VNC server.
+## ✨ Features
 
-## Requirements
+* **Easy Setup** – Start a proxy server in seconds and connect to your VNC server.
+* **Web-based Access** – Use any modern browser as a VNC client.
+* **Custom Arguments** – Supports both noVNC (`--listen`, `--target`) and all **websockify** options.
+* **Secure Connection** – SSL/TLS support with `--ssl-only`, `--cert`, and `--key`.
 
-* Python 3.x
-* VNC server (e.g., TigerVNC, TightVNC)
+* * *
 
-## Installation
+## 📦 Requirements
 
-Install via pip:
+* Python **3.7+**
+* A running VNC server (e.g., **TigerVNC**, **TightVNC**, **RealVNC**)
 
-```
-pip install novnc
-```
+* * *
 
-Manual Installation:
+## 🔧 Installation
 
-To install Terminal Widgets locally, follow these steps:
+### From PyPI
 
-1. Clone this repository to your local machine. `git clone https://github.com/ankushbhagats/noVNC`
-2. Navigate to the cloned directory. `cd noVNC`
-3. Install the package using pip: `pip install .` or `pip3 install .`
+    pip install novnc
 
-This will install noVNC along with its dependencies from the local source files.
+### From Source
 
-## Options
+1. Clone this repository:
+  
+      git clone https://github.com/ankushbhagats/noVNC
+      cd noVNC
+  
+2. Install locally:
+  
+      pip install .
+  
 
-* `--listen HOST:PORT`: Sets the proxy/webserver IP address and port to listen. Default is `http://[::]:5800`.
-* `--target HOST:PORT`: Sets the VNC IP address and port to target.
+This installs **noVNC** and **websockify**.
 
-## Usage
+* * *
 
-Start the server by running the module:
+## ⚙️ Options
 
-```
-novnc --listen <HOST:PORT> --target <VNC_SERVER_IP>:<VNC_SERVER_PORT> 
-```
+| Option | Description | Default |
+| --- | --- | --- |
+| `--listen HOST:PORT` | Address and port to listen on for WebSocket + web server | `0.0.0.0:8080` |
+| `--target HOST:PORT` | VNC server address and port to connect to | `127.0.0.1:5900` |
+| `--web PATH` | Path to noVNC static files (auto-extracted to temp directory) | *(auto set)* |
+| `--ssl-only` | Enable **TLS only** | Disabled |
+| `--cert FILE` | Path to SSL certificate (PEM) | None |
+| `--key FILE` | Path to SSL private key (PEM) | None |
 
-## Example
+> ✅ Any **websockify** arguments can also be passed through.
 
-```
-novnc --listen 0.0.0.0:8080 --target 127.0.0.1:5900
-```
+* * *
 
-Now server will listens on `0.0.0.0:8080` and targets the VNC server at `127.0.0.1:5900`.
+## 🚀 Usage
 
-## Configuration
+Start the proxy with your VNC server details:
 
-To customize the program's behavior, you can use the --listen and --target options when running the executable.
+    novnc --listen 0.0.0.0:8080 --target 127.0.0.1:5900
 
-## Troubleshooting
+Then open in your browser:
 
-* **Connection Issues** : Ensure the VNC server is running and accessible. Verify the IP and port.
+    http://localhost:8080/vnc.html
 
-## License
+* * *
 
-This program is licensed under the [MIT License](https://github.com/ankushbhagats/noVNC/blob/master/LICENSE). See the LICENSE file for details.
+## 🔒 HTTPS / WSS Setup
 
-## Acknowledgments
+Generate a self-signed cert (for testing):
 
-* [noVNC](https://github.com/novnc/noVNC) - Open source VNC client using HTML5 and WebSockets
-* [websockify](https://github.com/novnc/websockify) - WebSockets support for any application
+    openssl req -new -x509 -days 365 -nodes -out cert.pem -keyout key.pem
+
+Run with SSL:
+
+    novnc --listen 0.0.0.0:443 --target 127.0.0.1:5900 --ssl-only --cert cert.pem --key key.pem
+
+Access via:
+
+    https://yourdomain.com/vnc.html
+
+* * *
+
+## 🛠 Troubleshooting
+
+* **Connection refused** → Ensure your VNC server is running and reachable.
+* **Black screen** → Verify the VNC server allows connections (sometimes password-protected).
+* **Browser SSL warning** → Use a trusted CA (e.g., Let’s Encrypt) instead of self-signed certs.
+
+* * *
+
+## 📜 License
+
+Licensed under the [MIT License](LICENSE).
+
+* * *
+
+## 🙏 Acknowledgments
+
+* [noVNC](https://github.com/novnc/noVNC) – Browser-based VNC client (HTML5 + WebSockets)
+* [websockify](https://github.com/novnc/websockify) – WebSockets proxy for any TCP service

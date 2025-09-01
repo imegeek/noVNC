@@ -3,64 +3,42 @@ import sys
 import zipfile
 import tempfile
 import argparse
+from websockify import websockify_init
 
-__author__ = "Ankush Bhagat (Ankush Bhagat)"
-__version__ = "1.0.2"
+__author__ = "Ankush Bhagat"
+__version__ = "1.0.5"
 
-# Construct the path to the data folder
+# --- Extract noVNC server zip ---
 base_path = os.path.dirname(os.path.abspath(__file__))
+zip_file_path = os.path.join(base_path, "resources/novnc_server.zip")
+server_path = os.path.join(tempfile.gettempdir(), "novnc_server")
 
 def extract_zip(zip_file_path, extract_to_path):
-    # Check if the file exists
-    if not os.path.exists(zip_file_path):
-        print(f"The file {zip_file_path} does not exist.")
-        return
-
-    # Check if the specified directory exists, if not, create it
     if not os.path.exists(extract_to_path):
         os.makedirs(extract_to_path)
-    
-    # Open the ZIP file
-    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-        # Extract all contents to the specified directory
+    with zipfile.ZipFile(zip_file_path, "r") as zip_ref:
         zip_ref.extractall(extract_to_path)
-
-# Example usage
-zip_file_path = os.path.join(base_path, "resources/novnc_server.zip")
-server_path = os.path.join(tempfile.gettempdir(), 'novnc_server')
 
 extract_zip(zip_file_path, server_path)
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--listen",
-    metavar="HOST:PORT",
-    default="0.0.0.0:5800",
-    help="Set proxy/webserver ip address and port to listen. (Default: http://[::]:5800)"
-)
-
-parser.add_argument(
-    "--target",
-    metavar="HOST:PORT",
-    required=True,
-    help="Set VNC ip address and port to target."
-)
-
-parser.add_argument(
-    "-v", "--version",
-    action="version",
-    version=f"{__version__}"
-    )
-
-args = parser.parse_args()
-
-# Define the proxy mapping
-listen_host, listen_port = args.listen.split(":")
-target_host, target_port = args.target.split(":")
 
 def main():
-    try:
-        # Start the proxy server
-        os.system(f"websockify {listen_host}:{listen_port} {target_host}:{target_port} --web {server_path}")
-    except (KeyboardInterrupt, Exception):
-        sys.exit(0)
+    # --- Custom args (only parsed here) ---
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--listen", help="Listen address:port")
+    parser.add_argument("--target", help="Target host:port")
+    args, remaining = parser.parse_known_args()
+
+    # --- Build sys.argv for websockify ---
+    sys.argv = [sys.argv[0]]
+    if args.listen and args.target:
+        sys.argv += [args.listen, args.target]  # positional style
+    sys.argv += ["--web", server_path]         # always inject web dir
+    sys.argv += remaining                      # forward everything else
+
+    # --- Hand over to websockify ---
+    websockify_init()
+
+
+if __name__ == "__main__":
+    main()
