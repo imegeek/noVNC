@@ -6,7 +6,7 @@ import argparse
 from websockify import websockify_init
 
 __author__ = "Ankush Bhagat"
-__version__ = "1.0.5"
+__version__ = "1.1.6"
 
 # --- Extract noVNC server zip ---
 base_path = os.path.dirname(os.path.abspath(__file__))
