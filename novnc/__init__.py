@@ -11,7 +11,8 @@ __version__ = "1.1.6"
 # --- Extract noVNC server zip ---
 base_path = os.path.dirname(os.path.abspath(__file__))
 zip_file_path = os.path.join(base_path, "resources/novnc_server.zip")
-server_path = os.path.join(tempfile.gettempdir(), "novnc_server")
+tmp_dir = tempfile.TemporaryDirectory()
+server_path = tmp_dir.name
 
 def extract_zip(zip_file_path, extract_to_path):
     if not os.path.exists(extract_to_path):
@@ -42,3 +43,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    tmp_dir.cleanup()
