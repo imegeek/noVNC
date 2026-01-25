@@ -4,10 +4,10 @@ from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
+with codecs.open(os.path.join(here, "PYREADME.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '1.2.6'
+VERSION = '1.3.0'
 DESCRIPTION = "noVNC is a Python-based server that integrates noVNC and websockify to provide a web-based VNC client, enabling remote desktop access via a web browser."
 
 # Setting up
